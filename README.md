@@ -25,7 +25,7 @@ gcc -o main main.c
 Having a bitmap image and the shellcode in raw format:
 
 ```
-╰─$ gcc main -b 32bit.bmp -r infected.bmp -f xxx.bin -s
+╰─$ gcc main -b 32bit.bmp -r infected.bmp -f shellcode.bin -s
 Magic Number: BM
 Size: 118
 Offset: 54
