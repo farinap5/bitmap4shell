@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
      FILE           *source;
      FILE           *out_f;
      uint8_t        magic[2] = {0xde, 0xad}; // The signature must be 2 bytes.
-     char *fname     = "32bit.bmp";
+     char *fname     = "32bitLarge.bmp";
      char *out_f_n   = "out.bmp";
      char *datafile  = "shellcode.bin";
      int function = 0 ;
