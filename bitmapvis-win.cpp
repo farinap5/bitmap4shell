@@ -17,7 +17,7 @@ DWORD WINAPI Runner( LPVOID lpParam ){
     bitmap_header head;
     dib_header dbhead;
     FILE *bitmap_file;
-    char *bitmap_fname = "C:\\Users\\pietr\\CLionProjects\\bit4shellWin\\32bit.bmp";
+    char *bitmap_fname = "C:\\Users\\user\\bit4shellWin\\32bit.bmp";
 
 
     bitmap_file = fopen(bitmap_fname,"rb");

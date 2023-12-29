@@ -6,11 +6,21 @@ Security analysts employ diverse techniques to obfuscate codes in order to evade
 
 The objective of this project is to obscure shellcodes within bitmap images. It is important to note that this process does not entail backdorization of the image; instead, it mandates the presence of a suitable decoder for reading and subsequent execution. This approach effectively mitigates the risk of the shellcode being detected during static scans.
 
+Other algorithms for obfuscations, such as AES, may also be flagged when using some libs, since it became very common for this type of application.
+
+It still may be detected by behavior analysis.
+
 The loader may be modified to avoid its detection, but the technique will keep working as the same protocol to decode is used.
 
 `datavisualizer-lin.c` Loader for linux.
 
 `datavisualizer-win.c` Loader for windows.
+
+`bitmapvis-win.cpp` Loader for windows. Loads also a window showing the bitmap to look like a normal image visualizer.
+
+You may customize the loader to fit your use case.
+
+![Loader for Linux](img/termtosvg_m0fudx6r.svg)
 
 ### How To Use
 
@@ -22,7 +32,7 @@ gcc datavisualizer-lin.c
 gcc -o main main.c
 ```
 
-Having a bitmap image and the shellcode in raw format:
+Having a bitmap image of 32 bits and the shellcode in raw format, encode the shellcode over the pixel array of the image:
 
 ```
 ╰─$ gcc main -b 32bit.bmp -r infected.bmp -f shellcode.bin -s
@@ -51,6 +61,8 @@ Type `-h` to see the full help menu.
 
 ### Studing
 
+The following block is the dump of a bitmap header and dib header.
+
 ```
 00000000: 424d 7600 0000 0000 0000 3600 0000 2800  BMv.......6...(.
 00000010: 0000 6400 0000 6400 0000 0100 2000 0000  ..d...d..... ...
@@ -66,7 +78,6 @@ Bitmap Header: 14 Bytes
      0000 -> No use 
      0000 -> No use
 0000 3600 -> Offset start byte array
-
 ```
 
 DIB Header
@@ -99,9 +110,10 @@ I have i pixel as the following array `4080c000`, the binary representation woul
 01000000 10000000 11000000 00000000
 ```
 
-If I want to store four bits like `1111`, I may place it ending the byte.
+If I want to store four bits like `1111`, I may place it ending each byte.
+
 ```
-0100000`1` 1000000`1` 11000001 00000001
+0100000`1 1000000`1 1100000`1 0000000`1
 ```
 
 I would have a varition of one bit for the color in the worst case, probably not humanly noticeable.
@@ -117,7 +129,7 @@ For a given array of bytes, get the last bit of each of these bytes and compile 
 Result: 01110101
 ```
 
-The oposit, saving the data.
+The oposit, saving the data as did before.
 
 For a given byte and array of bytes, take each bit from the byte and place ending each corresponding byte from the array.
 
@@ -130,20 +142,18 @@ Result:
 
 ```
 
-The fisrt byte is 0x03 (00000011) the swapt occurs with 0, so the resulting byte should be 0x02 (00000010).
+For instance, the fisrt byte is 0x03 (00000011) the swapt occurs with 0 (the corresponding bit), so the resulting byte should be 0x02 (00000010).
 
 First we clear the last bit of a byte by performing a bitwise AND (&) against the byte 0xFE (11111110). Take 0x03 as example.
 
 ```
-
-      11111110
-    & 00000011
+      11111110 0xFE
+    & 00000011 0x03
       ========
-      00000010
+      00000010 result 0x02
 ```
 
 Then we do a bitwise OR (|) with the byte and 0x01 (00000001) passing the bit to it.
-
 
 
 Bit operations
