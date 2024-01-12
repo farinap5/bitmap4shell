@@ -1,3 +1,7 @@
+/*
+    made by Farinap5 https://github.com/farinap5
+*/
+
 #ifndef STRUCTS_H
 #define STRUCTS_H
 

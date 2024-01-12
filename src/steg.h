@@ -1,3 +1,7 @@
+/*
+    made by Farinap5 https://github.com/farinap5
+*/
+
 #ifndef STEG_H
 #define STEG_H
 
