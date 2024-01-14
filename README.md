@@ -1,8 +1,8 @@
 # Bitmap Shellcode Encoder
 
-**Did you use this project during an assignment? Let me know!**
+> **Did you use this project during an assignment? Let me know!**
 
-A simple steganography algorithm to obfuscate shellcode (or other data) in bitmap images.
+A simple steganography algorithm to obfuscate shellcode (or other data) within bitmap images.
 
 Security analysts employ diverse techniques to obfuscate codes in order to evade detection by anti-malware solutions. These methods include the utilization of symmetric block encryption, UUIDs, and various other obfuscation strategies.
 
